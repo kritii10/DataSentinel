@@ -41,13 +41,3 @@ Choose OpenAI in the sidebar and set `OPENAI_API_KEY` in `.env`, or choose Ollam
 - `datasentinel/storage.py`: SQLite incident history.
 - `app.py`: Streamlit UI.
 
-## Limitations
-This is a student portfolio MVP, not a production data reliability platform. Root-cause findings depend on available documentation and LLM quality. SQLGlot is included for future lineage analysis; the current MVP does not yet provide a complete lineage graph or execute arbitrary SQL. Repair is intentionally proposal-only; checks do not modify original data. Passing verification means only that the listed implemented checks passed, not that every issue has been repaired.
-
-## Tests
-```bash
-pytest -q
-```
-
-## Resume wording (use only after running and verifying the project)
-Built DataSentinel, a three-agent data-quality investigation prototype using LangChain, LangGraph, and RAG to profile datasets, retrieve supporting documentation, investigate potential root causes, and report repair-verification results through a Streamlit dashboard.
