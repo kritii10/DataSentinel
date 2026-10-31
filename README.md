@@ -6,13 +6,14 @@ DataSentinel profiles uploaded CSV data, retrieves supporting documentation, ask
 
 ## Features
 - CSV upload and dataset preview
-- Deterministic quality checks: missing values, duplicate rows, negative values in business numeric fields
+- Deterministic quality checks: missing values, duplicate rows, negative values in business numeric fields (generic CSVs)
+- Telemetry release-regression checks: required-field gaps, duplicate event IDs, schema drift (`productId` vs `product_id`), ingestion lag, checkout-funnel drops, API 5xx and latency spikes
 - Three specialized agent roles: Data Detective, Root-Cause Investigator, Repair & Verification
 - LangGraph orchestration with shared state
 - RAG knowledge base using Chroma and sentence-transformers embeddings
 - Local SQLite incident history
 - Streamlit dashboard and JSON report export
-- Synthetic demo dataset with deliberately seeded defects
+- Synthetic demo dataset (`data/demo_app_telemetry.csv`) with deliberately seeded defects; regenerate with `python scripts/make_demo_data.py`
 
 ## Quick start (macOS)
 ```bash
@@ -41,3 +42,22 @@ Choose OpenAI in the sidebar and set `OPENAI_API_KEY` in `.env`, or choose Ollam
 - `datasentinel/storage.py`: SQLite incident history.
 - `app.py`: Streamlit UI.
 
+
+## Evaluation
+
+`python scripts/eval_datasentinel.py` seeds 5 defect types (missing required field, duplicate event IDs, schema drift, ingestion delay, API 5xx spike) into 2,000-row synthetic telemetry over 5 runs and scores the deterministic scanner (no LLM or API key needed). Results are on synthetic data, so treat them as a self-test rather than a production benchmark.
+
+| Metric | Result |
+|---|---|
+| Recall on seeded defect types | 100% (25/25) |
+| False alarms on clean data | 0 |
+| Avg scan time (2,000 rows) | ~50 ms |
+
+Known limitation: a missing `event_id` is reported twice (generic `missing_values` plus `required_field_missing`).
+
+## Tests
+
+```
+pip install pytest
+pytest
+```
